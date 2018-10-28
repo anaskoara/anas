@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * create product custom fileds.
+ */
+ 
+/**
+ * Implements hook_enable).
+ */
+function anas_install() {
+	$field = field_read_field('anas_membership_type_id');
+	if (empty($field)) {
+		$field = array(
+		// It is strongly advised to prefix the field name with the name of the module 
+		// that defines it, to avoid name clashes. Fields created through Field UI are
+		// prefixed with 'field_'
+		'field_name' => 'anas_membership_type_id',
+		'type' => 'number_integer',
+		'cardinality' => 1, // Not required, as is default. Number of values field can hold. 
+	);
+    field_create_field($field);
+  }
+  
+  foreach (commerce_product_type_get_name() as $type => $name) {
+	  $instance = array(
+		  'field_name' => 'anas_membership_type_id',
+		  'entity_type' => 'commerce_product',
+		  'bundle' => $name,
+		  'label' => t('CiviCRM Membership Type'),
+		  'widget' => array('type' => 'options_select',)
+		  ,  
+		);
+	field_create_instance($instance);
+  }
+}
+/**
+ * Implements hook_uninstall().
+ */
+function anas_uninstall() {
+ 
+    drupal_set_message("hook_deleted");
+}
